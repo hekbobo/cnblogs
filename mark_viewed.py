@@ -7,6 +7,11 @@ import random
 import time
 from urllib.parse import urlparse
 
+proxies={
+    'http':'http://'+proxy,
+    'https':'https://'+proxy,
+}
+
 header1 = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
   "Referer":"https://www.cnblogs.com/xuanyuan/p/12935503.html","Origin":"https://www.cnblogs.com/","Connection":"close"} 
 
@@ -23,7 +28,7 @@ useragent = [
           "Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 950) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/14.14263"
 ]
 
-def blogsMardViewed(url):
+def blogsMardViewed(url,ip,port):
     parsed = urlparse(url)
     beginIndex = url.find('articles')
     endIndex = url.find('.html')
@@ -38,7 +43,12 @@ def blogsMardViewed(url):
     header1["Origin"]=parsed.hostname
     header1["User-Agent"] =useragent[random.randint(0,len(useragent) -1 )]
     try:
-        r = requests.put(countUrl, timeout = 5,headers=header1)        
+        if len(ip)== 0:            
+            r = requests.put(countUrl, proxies=proxies, timeout = 5,headers=header1)        
+        else:
+            proxies['https'] ='https://%s:%s' %(ip, str(port))
+            proxies['http'] = 'http://%s:%s' % (ip , str(port))
+            r = requests.put(countUrl, proxies=proxies, timeout = 5,headers=header1)        
         print(r.url)
         print(r.reason)
     except Exception as identifier:
