@@ -8,8 +8,8 @@ import time
 from urllib.parse import urlparse
 
 proxies={
-    'http':'http://'+proxy,
-    'https':'https://'+proxy,
+    'http':'',
+    'https':''
 }
 
 header1 = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36(KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
@@ -28,13 +28,13 @@ useragent = [
           "Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 950) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Mobile Safari/537.36 Edge/14.14263"
 ]
 
-def blogsMardViewed(url,ip,port):
+def blogsMark_viewed(url,ip,port):
     parsed = urlparse(url)
-    beginIndex = url.find('articles')
+    beginIndex = url.find('/p/')
     endIndex = url.find('.html')
     if beginIndex != -1 :
-        articleId = url[beginIndex+9:endIndex]
-    else:
+        articleId = url[beginIndex+len('/p/'):endIndex]        
+    else:        
         print("地址有错")
         return
     
@@ -49,9 +49,9 @@ def blogsMardViewed(url,ip,port):
             proxies['https'] ='https://%s:%s' %(ip, str(port))
             proxies['http'] = 'http://%s:%s' % (ip , str(port))
             r = requests.put(countUrl, proxies=proxies, timeout = 5,headers=header1)        
-        print(r.url)
+        print(url)
         print(r.reason)
     except Exception as identifier:
         print(str(identifier))
     
-#blogsMark_viewed("https://www.cnblogs.com/xuanyuan/p/12935503.html","58.61.154.153",8080)
+blogsMark_viewed("https://www.cnblogs.com/xuanyuan/p/12935503.html","58.61.154.153",8080)
